@@ -13,7 +13,7 @@ $ che
 ```sh
 $ git clone https://github.com/san650/che.git
 $ cd che
-$ ln -s `pwd`/che /usr/local/bin/che
+$ ln -s `pwd`/che.sh /usr/local/bin/che
 ```
 
 ## License
