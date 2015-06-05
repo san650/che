@@ -5,7 +5,6 @@ red=$(     printf '\033'[31m )
 green=$(   printf '\033'[32m )
 yellow=$(  printf '\033'[33m )
 
-npm_bin=$(npm bin)
 echo $red'
           _____                    _____                    _____
          /\    \                  /\    \                  /\    \
@@ -38,12 +37,9 @@ function message
 
 message 'Calculating the largest prime number divisible by two...'
 
-npm cache clean --silent
-npm install --no-spin --silent
-bower cache clean --silent
-bower install --silent
-
-export PATH="$npm_bin:$PATH"
+version=$(sed -n '/"ember-cli"/p' package.json | awk '{ print $2 }' | sed 's/[",]//g')
+ln -snf ~/.che/$version/node_modules/ node_modules
+ln -snf ~/.che/$version/bower_components/ bower_components
 
 ember_cli_version=$(ember --version | grep ^version | awk '{ print $2 }')
 
