@@ -52,6 +52,7 @@ case $cmd in
   ;;
   install)
     message "Installing.."
+    mkdir -p $path
     cp package.json $path/
     cp bower.json $path/
     (
