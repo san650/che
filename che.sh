@@ -5,6 +5,17 @@ red=$(     printf '\033'[31m )
 green=$(   printf '\033'[32m )
 yellow=$(  printf '\033'[33m )
 
+version=$(sed -n '/"ember-cli"/p' package.json | awk '{ print $2 }' | sed 's/[",]//g')
+
+if [[ -z $version ]]
+then
+  echo "Booom!"
+  exit 1
+fi
+
+cmd=$1
+path=~/.che/$version
+
 echo $red'
           _____                    _____                    _____
          /\    \                  /\    \                  /\    \
@@ -35,15 +46,32 @@ function message
   echo "$green$1$end"
 }
 
-message 'Calculating the largest prime number divisible by two...'
+case $cmd in
+  "")
+    # Support che without command (implicit command)
+  ;;
+  install)
+    message "Installing.."
+    cp package.json $path/
+    cp bower.json $path/
+    (
+      cd $path
+      npm install --silent
+      bower install --silent
+    )
+  ;;
+  *)
+    echo $red"Invalid command"$end
+    exit 1
+  ;;
+esac
 
-version=$(sed -n '/"ember-cli"/p' package.json | awk '{ print $2 }' | sed 's/[",]//g')
-ln -snf ~/.che/$version/node_modules/ node_modules
-ln -snf ~/.che/$version/bower_components/ bower_components
+ln -snf $path/node_modules/ node_modules
+ln -snf $path/bower_components/ bower_components
 
 ember_cli_version=$(ember --version | grep ^version | awk '{ print $2 }')
 
-message "It seems to be two."
 echo
 message "${yellow}Using ember-cli version ${green}$ember_cli_version"
+
 message 'Done.'
